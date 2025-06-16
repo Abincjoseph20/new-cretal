@@ -16,7 +16,7 @@ SECRET_KEY = 'django-insecure-!=^hg(ii%!1t1+rj8x=ho-nlit+&_k0*a0xg$@&w*)s%kwwdw#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['new-cretal.onrend.com', '127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -43,6 +43,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'cretal.urls'
