@@ -87,22 +87,26 @@ def login(request):
 
         user = auth.authenticate(email=email, password=password)
         if user is not None:
-            try:
-                cart = Carts.objects.get(cart_id=_cart_id(request))  # Get the cart of the session
-                cart_items = Cart_items.objects.filter(cart=cart, is_active=True)
-                if cart_items.exists():  # Ensure there are active cart items
-                    for item in cart_items:
-                        item.user = user  # Assign the logged-in user to the cart item
-                        item.save()  # Save the updated cart item
-            except Carts.DoesNotExist:
-                pass  # If no cart exists for the session, do nothing
+            if user.is_active:
+                try:
+                    cart = Carts.objects.get(cart_id=_cart_id(request))  # Get the cart of the session
+                    cart_items = Cart_items.objects.filter(cart=cart, is_active=True)
+                    if cart_items.exists():  # Ensure there are active cart items
+                        for item in cart_items:
+                            item.user = user  # Assign the logged-in user to the cart item
+                            item.save()  # Save the updated cart item
+                except Carts.DoesNotExist:
+                    pass  # If no cart exists for the session, do nothing
 
-            auth.login(request, user)  # Log the user in
-            messages.success(request, 'You are now logged in')
-            return redirect('home')  # Redirect to the home page after login
+                auth.login(request, user)  # Log the user in
+                messages.success(request, 'You are now logged in')
+                return redirect('admin_home')  # Redirect to the home page after login
+            else:
+                messages.error(request, 'Invalid login credentials')
+                return redirect('login')
         else:
-            messages.error(request, 'Invalid login credentials')
-            return redirect('login')
+                messages.error(request, 'Account is not activated. Please check your email.')
+                return redirect('login')
 
     return render(request, 'accounts/login.html')
 

@@ -1,6 +1,9 @@
 from django.shortcuts import render,redirect, get_object_or_404
 from django.views import View
 from .models import Product
+from .forms import ProductForm
+from django.contrib import messages
+
 
 # Create your views here.
 
@@ -98,3 +101,25 @@ def demo(request):
 
 def erro_handiling(request):
     return render(request,'mainapp/error_message.html')
+
+
+
+
+def add_product(request):
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Product added successfully.")
+            return redirect('add_product')
+        else:
+            messages.error(request, "Please correct the errors below.")
+    else:
+        form = ProductForm()
+    
+    return render(request, 'admin/add_product.html', {'form': form})
+
+
+
+def admin_home(request):
+    return render(request,'admin/admin_home.html')

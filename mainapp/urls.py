@@ -11,5 +11,8 @@ urlpatterns = [
     path('search/', views.search, name='search'),
     path('store/', views.store, name='store'),
     path('error_message', views.erro_handiling, name='erro_handiling'),
+    
 
+    path('admin_home/', views.admin_home, name='admin_home'),
+    path('add-product/', views.add_product, name='add_product'),
 ]
