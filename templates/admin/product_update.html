@@ -1,0 +1,138 @@
+{% extends 'admin/admin_home.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/add_products.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<div class="form-container">
+    <div class="form-header">
+        <div class="header-content">
+            <h1><i class="fas fa-cube"></i> Add New Product</h1>
+            <a href="#" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Back to Products
+            </a>
+        </div>
+    </div>
+
+    <div class="form-card">
+        <div class="card-header">
+            <i class="fas fa-info-circle"></i> Product Information
+        </div>
+        
+        <div class="card-body">
+            <form method="POST" enctype="multipart/form-data" class="product-form">
+                {% csrf_token %}
+                
+                <div class="form-grid">
+                    <!-- Left Column -->
+                    <div class="form-column">
+                        <div class="form-group">
+                            <label for="id_title">Product Title</label>
+                            {{ form.title }}
+                            <div class="form-hint">Enter a descriptive product name</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Pricing</label>
+                            <div class="price-group">
+                                <div class="price-input">
+                                    <label for="id_selling_price">Selling Price</label>
+                                    <div class="input-with-icon">
+                                        <span class="currency">$</span>
+                                        {{ form.selling_price }}
+                                    </div>
+                                </div>
+                                <div class="price-input">
+                                    <label for="id_discounted_price">Discounted Price</label>
+                                    <div class="input-with-icon">
+                                        <span class="currency">$</span>
+                                        {{ form.discounted_price }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column -->
+                    <div class="form-column">
+                        <div class="form-group">
+                            <label for="id_category">Category</label>
+                            <div class="select-wrapper">
+                                <i class="fas fa-chevron-down"></i>
+                                {{ form.category }}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_product_quantity">Stock Quantity</label>
+                            {{ form.product_quantity }}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_product_image">Product Image</label>
+                            <div class="file-upload">
+                                <label class="upload-area" id="file-upload-label">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <span class="file-name">Click to upload or drag and drop</span>
+                                    {{ form.product_image }}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="id_description">Product Description</label>
+                    {{ form.description }}
+                    <div class="form-hint">Describe your product in detail</div>
+                </div>
+
+                <div class="form-actions">
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save Product
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+// File upload preview
+document.getElementById('id_product_image').addEventListener('change', function(e) {
+    const label = document.getElementById('file-upload-label');
+    const fileName = e.target.files[0] ? e.target.files[0].name : 'Click to upload or drag and drop';
+    label.querySelector('.file-name').textContent = fileName;
+    
+    if (e.target.files[0]) {
+        label.classList.add('has-file');
+    } else {
+        label.classList.remove('has-file');
+    }
+});
+
+// Form validation
+document.querySelector('.product-form').addEventListener('submit', function(e) {
+    let isValid = true;
+    const requiredFields = this.querySelectorAll('[required]');
+    
+    requiredFields.forEach(field => {
+        if (!field.value.trim()) {
+            field.classList.add('invalid');
+            isValid = false;
+        } else {
+            field.classList.remove('invalid');
+        }
+    });
+    
+    if (!isValid) {
+        e.preventDefault();
+        alert('Please fill in all required fields');
+    }
+});
+</script>
+{% endblock %}
+{% endblock %}
