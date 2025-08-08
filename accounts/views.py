@@ -100,7 +100,10 @@ def login(request):
 
                 auth.login(request, user)  # Log the user in
                 messages.success(request, 'You are now logged in')
-                return redirect('admin_home')  # Redirect to the home page after login
+                if user.is_superadmin:
+                    return redirect('admin_home')
+                else:
+                    return redirect('home')
             else:
                 messages.error(request, 'Invalid login credentials')
                 return redirect('login')
